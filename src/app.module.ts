@@ -2,11 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GraphQLModule, Query } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { UsersModule } from './users/users.module';
-import { CommonModule } from './common/common.module';
-import { LoggerModule } from './logger/logger.module';
+import { User } from './users/entities/user.entity';
+import { AppResolver } from './app.resolver';
 
 @Module({
   imports: [
@@ -32,21 +31,16 @@ import { LoggerModule } from './logger/logger.module';
       database: process.env.DB_NAME,
       synchronize: true,
       logging: true,
-      entities: [],
+      entities: [User],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      debug: false,
-      playground: false,
       autoSchemaFile: true,
       context: ({ req }) => ({
         user: req['user'],
       }),
     }),
-    UsersModule,
-    CommonModule,
-    LoggerModule,
   ],
-  providers: [],
+  providers: [AppResolver],
 })
 export class AppModule {}
