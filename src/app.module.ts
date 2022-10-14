@@ -1,11 +1,15 @@
-import { Module } from '@nestjs/common';
+import { UsersModule } from './users/users.module';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GraphQLModule, Query } from '@nestjs/graphql';
+import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { User } from './users/entities/user.entity';
-import { AppResolver } from './app.resolver';
+import { MailModule } from './mail/mail.module';
+import { LoggerModule } from './logger/logger.module';
+import { JwtModule } from './jwt/jwt.module';
+import { JwtMiddleware } from './jwt/jwt.middleware';
 
 @Module({
   imports: [
@@ -40,7 +44,20 @@ import { AppResolver } from './app.resolver';
         user: req['user'],
       }),
     }),
+    LoggerModule.forRoot({
+      nodeEnv: process.env.NODE_ENV,
+    }),
+    JwtModule.forRoot({
+      privateKey: process.env.PRIVATE_KEY,
+      encodingCount: +process.env.ENCODING_COUNT,
+    }),
+    UsersModule,
+    MailModule,
   ],
-  providers: [AppResolver],
+  providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtMiddleware).forRoutes({ path: '/graphql', method: RequestMethod.ALL });
+  }
+}

@@ -5,9 +5,7 @@ import * as winston from 'winston';
 import * as winstonDaily from 'winston-daily-rotate-file';
 @Injectable()
 export class LoggerService {
-  constructor(
-    @Inject(CONFIG_OPTIONS) private readonly options: LoggerModuleOptions,
-  ) {}
+  constructor(@Inject(CONFIG_OPTIONS) private readonly options: LoggerModuleOptions) {}
 
   logger(): winston.Logger {
     const { combine, timestamp, label, printf } = winston.format;
@@ -98,26 +96,16 @@ export class LoggerService {
     } catch (error) {
       const callerLine = error.stack.split('\n')[2];
       const apiNameArray = callerLine.split(' ');
-      const apiName = apiNameArray.filter(
-        (item) => item !== null && item !== undefined && item !== '',
-      )[1];
-      let LineNumber = callerLine
-        .split('(')[1]
-        .split('/')
-        .slice(-1)[0]
-        .slice(0, -1);
+      const apiName = apiNameArray.filter((item) => item !== null && item !== undefined && item !== '')[1];
+      let LineNumber = callerLine.split('(')[1].split('/').slice(-1)[0].slice(0, -1);
       if (LineNumber.includes('C:')) {
-        LineNumber = `(TEST) ${LineNumber.split('\\').slice(-1)[0]}`;
+        LineNumber = `${LineNumber.split('\\').slice(-1)[0]}`;
       }
 
       const lineNumberText = `Line Number: ${LineNumber} ::: ${apiName} | `;
-      const errorMessage = `${
-        error.message ? `Error Message: ${error.message} | ` : ''
-      }`;
+      const errorMessage = `${error.message ? `Error Message: ${error.message} | ` : ''}`;
       const errorName = `${name ? `Error Name: ${name} | ` : ''}`;
-      const errorStack = `${
-        stack ? `Error Stack: ${stack.split('\n')[1].trim()} | ` : ''
-      }`;
+      const errorStack = `${stack ? `Error Stack: ${stack.split('\n')[1].trim()} | ` : ''}`;
       const customMessage = `${custom ? `Custom Message : ${custom}` : ''}`;
 
       return `${lineNumberText}${errorMessage}${errorName}${errorStack}${customMessage}`;
