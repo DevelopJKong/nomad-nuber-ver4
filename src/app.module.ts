@@ -1,15 +1,16 @@
+import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { User } from './users/entities/user.entity';
 import { MailModule } from './mail/mail.module';
 import { LoggerModule } from './logger/logger.module';
 import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { Verification } from './users/entities/verification.entity';
 
 @Module({
   imports: [
@@ -24,6 +25,14 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
+        PRIVATE_KEY: Joi.string().required(),
+        ENCODING_COUNT: Joi.number().required(),
+        MAIL_SERVICE: Joi.string().required(),
+        MAIL_HOST: Joi.string().required(),
+        MAIL_PORT: Joi.string().required(),
+        MAIL_SECURE: Joi.boolean().required(),
+        MAIL_GOOGLE_MAIL: Joi.string().required(),
+        MAIL_GOOGLE_PASSWORD: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -35,7 +44,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
       database: process.env.DB_NAME,
       synchronize: true,
       logging: true,
-      entities: [User],
+      entities: [User, Verification],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -51,13 +60,25 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
       privateKey: process.env.PRIVATE_KEY,
       encodingCount: +process.env.ENCODING_COUNT,
     }),
+    MailModule.forRoot({
+      service: process.env.MAIL_SERVICE,
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
+      secure: Boolean(process.env.MAIL_SECURE),
+      auth: {
+        user: process.env.MAIL_GOOGLE_MAIL,
+        pass: process.env.MAIL_GOOGLE_PASSWORD,
+      },
+    }),
     UsersModule,
-    MailModule,
   ],
   providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({ path: '/graphql', method: RequestMethod.ALL });
+    consumer.apply(JwtMiddleware).forRoutes({
+      path: 'graphql',
+      method: RequestMethod.POST,
+    });
   }
 }

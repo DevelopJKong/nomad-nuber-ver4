@@ -1,3 +1,4 @@
+import { Verification } from './entities/verification.entity';
 import { JwtService } from './../jwt/jwt.service';
 import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
@@ -7,13 +8,16 @@ import { LoggerService } from 'src/logger/logger.service';
 import { Repository } from 'typeorm';
 import { CreateAccountInput, CreateAccountOutput } from './dtos/create-account.dto';
 import { User } from './entities/user.entity';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
+    @InjectRepository(Verification) private readonly verifications: Repository<Verification>,
     private readonly loggerService: LoggerService,
     private readonly jwtService: JwtService,
+    private readonly emailService: MailService,
   ) {}
 
   async findById({ userId }: UserProfileInput): Promise<UserProfileOutput> {
@@ -58,6 +62,14 @@ export class UsersService {
         }),
       );
 
+      const verification = await this.verifications.save(
+        this.verifications.create({
+          user,
+        }),
+      );
+
+      await this.emailService.sendMail(this.emailService.mailVar(user.email, user.email, verification.code));
+
       //* 👍 success
       this.loggerService.logger().info(this.loggerService.loggerInfo('사용자 계정 만들기 성공'));
       return {
@@ -80,7 +92,6 @@ export class UsersService {
       const user = await this.users.findOne({
         where: {
           email,
-          password,
         },
         select: {
           id: true,

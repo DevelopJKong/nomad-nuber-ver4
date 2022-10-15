@@ -15,10 +15,10 @@ export class JwtMiddleware implements NestMiddleware {
           const { user } = await this.usersService.findById(decoded['id']);
           req['user'] = user;
         } catch (error) {
-          return next(new InternalServerErrorException());
+          next(new InternalServerErrorException());
         }
       }
-      next();
     }
+    next();
   }
 }
