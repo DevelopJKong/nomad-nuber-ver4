@@ -79,7 +79,7 @@ export class UsersService {
       //! 📢 error 예상치 못한 에러 발생
       this.loggerService
         .logger()
-        .info(this.loggerService.loggerInfo('계정을 생성할수 없습니다', error.message, error.name, error.stack));
+        .error(this.loggerService.loggerInfo('계정을 생성할수 없습니다', error.message, error.name, error.stack));
       return {
         ok: false,
         error: '계정을 생성할수 없습니다',

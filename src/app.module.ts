@@ -67,7 +67,7 @@ import { Verification } from './users/entities/verification.entity';
       secure: Boolean(process.env.MAIL_SECURE),
       auth: {
         user: process.env.MAIL_GOOGLE_MAIL,
-        pass: process.env.MAIL_GOOGLE_PASSWORD,
+        password: process.env.MAIL_GOOGLE_PASSWORD,
       },
     }),
     UsersModule,

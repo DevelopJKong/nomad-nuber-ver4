@@ -1,21 +1,28 @@
+import { LoggerService } from 'src/logger/logger.service';
 import { CONFIG_OPTIONS } from 'src/common/common.constant';
 import { MailModuleOptions } from './mail.interface';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 
 @Injectable()
 export class MailService {
-  constructor(@Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions) {}
+  constructor(
+    @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
+    private readonly loggerService: LoggerService,
+  ) {}
 
-  //* email config 속성 설정
+  /**
+   *
+   * @returns {object}
+   */
   config(): object {
     const {
       service,
       host,
       port,
       secure,
-      auth: { user, pass },
+      auth: { user, password },
     } = this.options;
 
     const data = {
@@ -25,13 +32,20 @@ export class MailService {
       secure,
       auth: {
         user,
-        pass,
+        password,
       },
     };
 
     return data;
   }
-  mailVar(email: string, username: string, codeNum: string) {
+  /**
+   *
+   * @param {string} email
+   * @param {string} username
+   * @param {string} codeNum
+   * @returns {object}
+   */
+  mailVar(email: string, username: string, codeNum: string): object {
     const {
       auth: { user },
     } = this.options;
@@ -54,14 +68,21 @@ export class MailService {
     return data;
   }
 
-  async sendMail(data: Mail.Options) {
+  /**
+   *
+   * @param {Mail.Options} data
+   * @returns {string}
+   */
+  async sendMail(data: Mail.Options): Promise<string> {
     const transporter = nodemailer.createTransport(this.config());
-    transporter.sendMail(data, (err, info) => {
-      if (err) {
-        console.log(err);
-      } else {
-        return info.response;
-      }
-    });
+    try {
+      const sendMail = await transporter.sendMail(data);
+      return sendMail.response;
+    } catch (error) {
+      this.loggerService
+        .logger()
+        .error(this.loggerService.loggerInfo('메일을 보내지 못하였습니다', error.message, error.name, error.stack));
+      throw new InternalServerErrorException();
+    }
   }
 }
