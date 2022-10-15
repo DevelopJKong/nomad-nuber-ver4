@@ -11,6 +11,7 @@ import { JwtModule } from './jwt/jwt.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { Verification } from './users/entities/verification.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { Verification } from './users/entities/verification.entity';
       },
     }),
     UsersModule,
+    AuthModule,
   ],
   providers: [],
 })
