@@ -5,7 +5,7 @@ export interface MailModuleOptions {
   secure: boolean;
   auth: {
     user: string;
-    password: string;
+    pass: string;
   };
 }
 

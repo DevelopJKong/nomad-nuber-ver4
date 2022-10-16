@@ -22,7 +22,7 @@ export class MailService {
       host,
       port,
       secure,
-      auth: { user, password },
+      auth: { user, pass },
     } = this.options;
 
     const data = {
@@ -32,7 +32,7 @@ export class MailService {
       secure,
       auth: {
         user,
-        password,
+        pass,
       },
     };
 

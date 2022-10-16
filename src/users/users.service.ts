@@ -1,3 +1,4 @@
+import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { Verification } from './entities/verification.entity';
 import { JwtService } from './../jwt/jwt.service';
 import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
@@ -132,6 +133,42 @@ export class UsersService {
       return {
         ok: false,
         error: '로그인을 할수없습니다',
+      };
+    }
+  }
+
+  async editProfile(userId: number, { email, password }: EditProfileInput): Promise<EditProfileOutput> {
+    try {
+      const user = await this.users.findOne({ where: { id: userId } });
+      if (email) {
+        user.email = email;
+        user.verified = false;
+
+        await this.verifications.delete({ user: { id: user.id } });
+        const verification = await this.verifications.save(this.verifications.create({ user }));
+
+        await this.emailService.sendMail(this.emailService.mailVar(user.email, user.email, verification.code));
+      }
+
+      if (password) {
+        user.password = password;
+      }
+
+      await this.users.save(user);
+
+      //* 👍 success
+      this.loggerService.logger().info(this.loggerService.loggerInfo('계정 정보 수정 성공'));
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      //! 📢 error 예상치 못한 에러 발생
+      this.loggerService
+        .logger()
+        .error(this.loggerService.loggerInfo('계정 정보를 수정 할수 없습니다', error.message, error.name, error.stack));
+      return {
+        ok: false,
+        error: '계정 정보를 수정 할수 없습니다',
       };
     }
   }

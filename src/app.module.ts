@@ -50,9 +50,7 @@ import { AuthModule } from './auth/auth.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      context: ({ req }) => ({
-        user: req['user'],
-      }),
+      context: ({ req }) => ({ user: req['user'] }),
     }),
     LoggerModule.forRoot({
       nodeEnv: process.env.NODE_ENV,
@@ -68,7 +66,7 @@ import { AuthModule } from './auth/auth.module';
       secure: Boolean(process.env.MAIL_SECURE),
       auth: {
         user: process.env.MAIL_GOOGLE_MAIL,
-        password: process.env.MAIL_GOOGLE_PASSWORD,
+        pass: process.env.MAIL_GOOGLE_PASSWORD,
       },
     }),
     UsersModule,
