@@ -1,3 +1,4 @@
+import { VerifyEmailOutput, VerifyEmailInput } from './dtos/verify-email.dto';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
@@ -39,4 +40,9 @@ export class UsersResolver {
   ): Promise<EditProfileOutput> {
     return this.usersService.editProfile(authUser.id, editProfileInput);
   }
+
+  @Mutation((returns) => VerifyEmailOutput)
+  async verifyEmail(@Args('input') verifyEmailInput: VerifyEmailInput) {
+    return this.usersService.verifyEmail(verifyEmailInput);
+  };
 }
