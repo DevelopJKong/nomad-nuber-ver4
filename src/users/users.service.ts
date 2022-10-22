@@ -222,15 +222,23 @@ export class UsersService {
         verification.user.verified = true;
         await this.users.save(verification.user);
         await this.verifications.delete(verification.id);
+        //* 👍 success
+        this.loggerService.logger().info(this.loggerService.loggerInfo('이메일 인증 성공'));
         return {
           ok: true,
         };
       }
+      //! 📢 error 예상치 못한 에러 발생
+      this.loggerService.logger().error(this.loggerService.loggerInfo('인증을 하실수 없습니다'));
       return {
         ok: false,
         error: '인증을 하실수 없습니다',
       };
     } catch (error) {
+      //! 📢 error 예상치 못한 에러 발생
+      this.loggerService
+        .logger()
+        .error(this.loggerService.loggerInfo('이메일을 확인할수 없습니다', error.message, error.name, error.stack));
       return {
         ok: false,
         error: '이메일을 확인할수 없습니다',

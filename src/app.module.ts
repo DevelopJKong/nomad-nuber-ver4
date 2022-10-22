@@ -1,3 +1,4 @@
+import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
@@ -12,6 +13,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { Verification } from './users/entities/verification.entity';
 import { AuthModule } from './auth/auth.module';
+import { RestaurantsModule } from './restaurants/restaurants.module';
 
 @Module({
   imports: [
@@ -45,7 +47,7 @@ import { AuthModule } from './auth/auth.module';
       database: process.env.DB_NAME,
       synchronize: true,
       logging: true,
-      entities: [User, Verification],
+      entities: [User, Verification, Restaurant],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -71,6 +73,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    RestaurantsModule,
   ],
   providers: [],
 })
