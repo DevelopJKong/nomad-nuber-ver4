@@ -1,3 +1,4 @@
+import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -53,6 +54,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
     }),
     UsersModule,
     MailModule,
+    AuthModule,
   ],
   providers: [],
 })

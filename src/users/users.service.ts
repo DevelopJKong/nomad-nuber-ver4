@@ -124,4 +124,6 @@ export class UsersService {
       };
     }
   }
+
+  async editProfile(userId: number, { email, password }) {}
 }
