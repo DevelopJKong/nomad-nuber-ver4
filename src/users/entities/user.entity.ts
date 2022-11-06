@@ -1,15 +1,11 @@
 import { CoreEntity } from './../../common/entities/core.entity';
-import {
-  Field,
-  InputType,
-  ObjectType,
-  registerEnumType,
-} from '@nestjs/graphql';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { Field, InputType, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { IsEmail, IsString, IsEnum } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
 import { LoggerService } from 'src/logger/logger.service';
+import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 
 export enum UserRole {
   Client = 'Client',
@@ -18,7 +14,7 @@ export enum UserRole {
 }
 registerEnumType(UserRole, { name: 'UserRole' });
 
-@InputType({ isAbstract: true })
+@InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
@@ -29,7 +25,7 @@ export class User extends CoreEntity {
   email: string;
 
   @Field((type) => String)
-  @Column()
+  @Column({ select: false })
   @IsString()
   password: string;
 
@@ -41,6 +37,10 @@ export class User extends CoreEntity {
   @Field((type) => Boolean)
   @Column({ default: false })
   verified: boolean;
+
+  @Field((type) => Restaurant)
+  @OneToMany((type) => Restaurant, (restaurants) => restaurants.owner)
+  restaurants: Restaurant[];
 
   @BeforeInsert()
   @BeforeUpdate()
@@ -56,7 +56,7 @@ export class User extends CoreEntity {
 
   async checkPassword(aPassword: string): Promise<boolean> {
     try {
-      const ok = await bcrypt.compare(aPassword,this.password);
+      const ok = await bcrypt.compare(aPassword, this.password);
       return ok;
     } catch (error) {
       throw new InternalServerErrorException();
