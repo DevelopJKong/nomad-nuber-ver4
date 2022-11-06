@@ -94,21 +94,26 @@ export class LoggerService {
     try {
       throw Error(message);
     } catch (error) {
-      const callerLine = error.stack.split('\n')[2];
-      const apiNameArray = callerLine.split(' ');
-      const apiName = apiNameArray.filter((item) => item !== null && item !== undefined && item !== '')[1];
-      let LineNumber = callerLine.split('(')[1].split('/').slice(-1)[0].slice(0, -1);
-      if (LineNumber.includes('C:')) {
-        LineNumber = `${LineNumber.split('\\').slice(-1)[0]}`;
+      try {
+        const callerLine = error.stack.split('\n')[2];
+        const apiNameArray = callerLine.split(' ');
+        const apiName = apiNameArray.filter((item: string) => item !== null && item !== undefined && item !== '')[1];
+        let LineNumber = callerLine.split('(')[1].split('/').slice(-1)[0].slice(0, -1);
+        if (LineNumber.includes('C:')) {
+          LineNumber = `${LineNumber.split('\\').slice(-1)[0]}`;
+        }
+
+        const lineNumberText = `Line Number: ${LineNumber} ::: ${apiName} | `;
+        const errorMessage = `${error.message ? `Error Message: ${error.message} | ` : ''}`;
+        const errorName = `${name ? `Error Name: ${name} | ` : ''}`;
+        const errorStack = `${stack ? `Error Stack: ${stack.split('\n')[1].trim()} | ` : ''}`;
+        const customMessage = `${custom ? `Custom Message : ${custom}` : ''}`;
+
+        return `${lineNumberText}${errorMessage}${errorName}${errorStack}${customMessage}`;
+      } catch (error) {
+        const { message, stack, name } = error;
+        return `Error Message ::: ${message} | Error Stack ::: ${stack} | Error Name ::: ${name}`;
       }
-
-      const lineNumberText = `Line Number: ${LineNumber} ::: ${apiName} | `;
-      const errorMessage = `${error.message ? `Error Message: ${error.message} | ` : ''}`;
-      const errorName = `${name ? `Error Name: ${name} | ` : ''}`;
-      const errorStack = `${stack ? `Error Stack: ${stack.split('\n')[1].trim()} | ` : ''}`;
-      const customMessage = `${custom ? `Custom Message : ${custom}` : ''}`;
-
-      return `${lineNumberText}${errorMessage}${errorName}${errorStack}${customMessage}`;
     }
   };
 }

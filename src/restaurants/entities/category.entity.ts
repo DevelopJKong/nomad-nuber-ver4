@@ -26,5 +26,6 @@ export class Category extends CoreEntity {
 
   @Field(type => [Restaurant])
   @OneToMany(type => Restaurant, (restaurant) => restaurant.category)
+  restaurants:[Restaurant];
 
 }

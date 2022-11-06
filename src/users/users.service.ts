@@ -34,14 +34,18 @@ export class UsersService {
     try {
       const user = await this.users.findOne({ where: { id: userId } });
 
+      //* 👍 success
+      this.loggerService.logger().info(this.loggerService.loggerInfo('유저 검색 성공'));
       return {
         ok: true,
         user,
       };
     } catch (error) {
+      const { message, name, stack } = error;
+      this.loggerService.logger().error(this.loggerService.loggerInfo('유저 검색 오류', message, name, stack));
       return {
         ok: false,
-        error: '유저를 찾지 못했습니다',
+        error: '유저 검색 오류',
       };
     }
   }
@@ -64,7 +68,7 @@ export class UsersService {
 
       if (exists) {
         //! 📢 error 존재하는 계정으로 사용자가 만들려고 했을 경우
-        this.loggerService.logger().error(this.loggerService.loggerInfo('사용자 계정 만들기 성공'));
+        this.loggerService.logger().error(this.loggerService.loggerInfo('이미 존재하는 계정입니다'));
         return {
           ok: false,
           error: '이미 존재하는 계정입니다',
@@ -95,12 +99,11 @@ export class UsersService {
       };
     } catch (error) {
       //! 📢 error 예상치 못한 에러 발생
-      this.loggerService
-        .logger()
-        .error(this.loggerService.loggerInfo('계정을 생성할수 없습니다', error.message, error.name, error.stack));
+      const { message, name, stack } = error;
+      this.loggerService.logger().error(this.loggerService.loggerInfo('계정 생성 오류', message, name, stack));
       return {
         ok: false,
-        error: '계정을 생성할수 없습니다',
+        error: '계정 생성 오류',
       };
     }
   }
@@ -135,6 +138,9 @@ export class UsersService {
       }
 
       const passwordCorrect = await user.checkPassword(password);
+
+      //! 📢 error 입력한 비밀번호가 잘못 되었을 경우
+      this.loggerService.logger().error(this.loggerService.loggerInfo('비밀번호가 잘못 되었습니다'));
       if (!passwordCorrect) {
         return {
           ok: false,
@@ -152,12 +158,11 @@ export class UsersService {
       };
     } catch (error) {
       //! 📢 error 예상치 못한 에러 발생
-      this.loggerService
-        .logger()
-        .error(this.loggerService.loggerInfo('로그인을 할수없습니다', error.message, error.name, error.stack));
+      const { message, name, stack } = error;
+      this.loggerService.logger().error(this.loggerService.loggerInfo('로그인 오류', message, name, stack));
       return {
         ok: false,
-        error: '로그인을 할수없습니다',
+        error: '로그인 오류',
       };
     }
   }
@@ -198,12 +203,11 @@ export class UsersService {
       };
     } catch (error) {
       //! 📢 error 예상치 못한 에러 발생
-      this.loggerService
-        .logger()
-        .error(this.loggerService.loggerInfo('계정 정보를 수정 할수 없습니다', error.message, error.name, error.stack));
+      const { message, name, stack } = error;
+      this.loggerService.logger().error(this.loggerService.loggerInfo('계정 정보 수정 오류', message, name, stack));
       return {
         ok: false,
-        error: '계정 정보를 수정 할수 없습니다',
+        error: '계정 정보 수정 오류',
       };
     }
   }
@@ -245,12 +249,11 @@ export class UsersService {
       };
     } catch (error) {
       //! 📢 error 예상치 못한 에러 발생
-      this.loggerService
-        .logger()
-        .error(this.loggerService.loggerInfo('이메일을 확인할수 없습니다', error.message, error.name, error.stack));
+      const { message, name, stack } = error;
+      this.loggerService.logger().error(this.loggerService.loggerInfo('이메일 확인 오류', message, name, stack));
       return {
         ok: false,
-        error: '이메일을 확인할수 없습니다',
+        error: '이메일 확인 오류',
       };
     }
   }
