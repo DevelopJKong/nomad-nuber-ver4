@@ -169,7 +169,7 @@ export class UsersService {
    *
    * @param {number} userId 유저 고유 아이디
    * @param {{ email,password}:EditProfileInput} editProfileInput 이메일, 비밀번호
-   * @returns
+   * @returns {Promise<EditProfileOutput>}
    */
 
   async editProfile(userId: number, { email, password }: EditProfileInput): Promise<EditProfileOutput> {
@@ -208,6 +208,15 @@ export class UsersService {
     }
   }
 
+  /**
+   *
+   * ! [5]⭐
+   * * verifyEmail()
+   * * 이메일을 인증하는 api
+   *
+   * @param {{code}:VerifyEmailInput} verifyEmailInput
+   * @returns {Promise<VerifyEmailOutput>}
+   */
   async verifyEmail({ code }: VerifyEmailInput): Promise<VerifyEmailOutput> {
     try {
       const verification = await this.verifications.findOne({

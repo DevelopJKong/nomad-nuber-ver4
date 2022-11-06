@@ -1,3 +1,4 @@
+import { Category } from './category.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsString, Length } from 'class-validator';
@@ -29,6 +30,9 @@ export class Restaurant extends CoreEntity {
 
   @RelationId((restaurant: Restaurant) => restaurant.owner)
   ownerId: number;
+
+  @ManyToOne((type) => Category, (category: Category) => category.restaurants)
+  category: Category;
 
   @Field((type) => Boolean)
   @Column({ default: false })

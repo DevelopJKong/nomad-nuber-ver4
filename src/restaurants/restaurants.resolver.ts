@@ -13,6 +13,6 @@ export class RestaurantsResolver {
   @Mutation((returns) => CreateRestaurantOutput)
   @Role(['Owner'])
   async createRestaurant(@AuthUser() authUser: User, @Args('input') createRestaurantInput: CreateRestaurantInput) {
-    return this.restaurantsService.createRestaurant(authUser,createRestaurantInput);
+    return this.restaurantsService.createRestaurant(authUser, createRestaurantInput);
   }
 }

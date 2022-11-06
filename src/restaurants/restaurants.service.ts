@@ -11,6 +11,10 @@ export class RestaurantsService {
 
   async createRestaurant(owner: User, createRestaurantInput: CreateRestaurantInput) {
     try {
+      const newRestaurant = this.restaurants.create(createRestaurantInput);
+
+
+
       return {
         ok: true,
       };
