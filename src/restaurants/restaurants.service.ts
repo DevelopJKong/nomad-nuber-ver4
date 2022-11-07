@@ -50,10 +50,11 @@ export class RestaurantsService {
   }
 
   async editRestaurant(owner: User, editRestaurantInput: EditRestaurantInput) {
+    const { restaurantId, categoryName, coverImg } = editRestaurantInput;
     try {
       const restaurant = await this.restaurants.findOne({
         where: {
-          id: editRestaurantInput.restaurantId,
+          id: restaurantId,
         },
       });
 
@@ -76,16 +77,13 @@ export class RestaurantsService {
       }
 
       let category: Category = null;
-      if (editRestaurantInput.categoryName) {
-        category = await this.categories.getOrCreateCategory(
-          editRestaurantInput.categoryName,
-          editRestaurantInput.coverImg,
-        );
+      if (categoryName || coverImg) {
+        category = await this.categories.getOrCreateCategory(categoryName, coverImg);
       }
 
       await this.restaurants.save([
         {
-          id: editRestaurantInput.restaurantId,
+          id: restaurantId,
           ...editRestaurantInput,
           ...(category && { category }),
         },
