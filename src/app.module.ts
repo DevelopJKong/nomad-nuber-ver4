@@ -1,3 +1,4 @@
+import { Category } from './restaurants/entities/category.entity';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -47,12 +48,18 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
       database: process.env.DB_NAME,
       synchronize: true,
       logging: true,
-      entities: [User, Verification, Restaurant],
+      entities: [User, Verification, Restaurant, Category],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
+      installSubscriptionHandlers: true,
       driver: ApolloDriver,
       autoSchemaFile: true,
-      context: ({ req }) => ({ user: req['user'] }),
+      context: ({ req, connection }) => {
+        const TOKEN_KEY = 'x-jwt';
+        return {
+          token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
+        };
+      },
     }),
     LoggerModule.forRoot({
       nodeEnv: process.env.NODE_ENV,
@@ -78,11 +85,4 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
   ],
   providers: [],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).forRoutes({
-      path: 'graphql',
-      method: RequestMethod.POST,
-    });
-  }
-}
+export class AppModule {}

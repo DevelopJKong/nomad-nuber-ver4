@@ -1,10 +1,11 @@
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { UsersService } from './../users/users.service';
-import { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from 'src/jwt/jwt.service';
 import { AllowedRoles } from './role.decorator';
 
+@Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
@@ -30,7 +31,7 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    const { user } = await this.userService.findById(decoded['id']);
+    const { user } = await this.userService.findById({ userId: decoded['id'] });
 
     if (!user) {
       return false;

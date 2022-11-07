@@ -1,5 +1,17 @@
 {
     "cSpell.words": [
         "Nuber"
+    ],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "main",
+            "database": "nuber-ver4",
+            "username": "postgres",
+            "password": "1234"
+        }
     ]
 }

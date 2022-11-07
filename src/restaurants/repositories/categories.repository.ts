@@ -1,8 +1,8 @@
-import { Category } from './../entities/category.entity';
+import { Category } from '../entities/category.entity';
 import { Repository } from 'typeorm';
 
 export class CategoryRepository extends Repository<Category> {
-  async getOrCreateCategory(name: string) {
+  async getOrCreateCategory(name: string, uri: string) {
     const categoryName = name.trim().toLowerCase();
     const categorySlug = categoryName.replace(/ /g, ' ');
     let category: Category = await this.findOne({
@@ -12,7 +12,9 @@ export class CategoryRepository extends Repository<Category> {
     });
 
     if (!category) {
-      category = await this.save(this.create({ slug: categorySlug, name: categoryName }));
+      category = await this.save(
+        this.create({ slug: categorySlug, name: categoryName, coverImg: uri }),
+      );
     }
     return category;
   }

@@ -33,7 +33,7 @@ export class UsersService {
   async findById({ userId }: UserProfileInput): Promise<UserProfileOutput> {
     try {
       const user = await this.users.findOne({ where: { id: userId } });
-
+      console.log(user);
       //* 👍 success
       this.loggerService.logger().info(this.loggerService.loggerInfo('유저 검색 성공'));
       return {
@@ -140,8 +140,8 @@ export class UsersService {
       const passwordCorrect = await user.checkPassword(password);
 
       //! 📢 error 입력한 비밀번호가 잘못 되었을 경우
-      this.loggerService.logger().error(this.loggerService.loggerInfo('비밀번호가 잘못 되었습니다'));
       if (!passwordCorrect) {
+        this.loggerService.logger().error(this.loggerService.loggerInfo('비밀번호가 잘못 되었습니다'));
         return {
           ok: false,
           error: '비밀번호가 잘못 되었습니다',
