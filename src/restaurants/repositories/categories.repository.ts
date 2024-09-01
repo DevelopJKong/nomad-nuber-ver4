@@ -2,7 +2,7 @@ import { Category } from '../entities/category.entity';
 import { Repository } from 'typeorm';
 
 export class CategoryRepository extends Repository<Category> {
-  async getOrCreateCategory(name: string = '', uri: string = '') {
+  async getOrCreateCategory(name = '', uri = '') {
     const categoryName = name.trim().toLowerCase();
     const categorySlug = categoryName.replace(/ /g, ' ');
     let category: Category = await this.findOne({
@@ -17,7 +17,7 @@ export class CategoryRepository extends Repository<Category> {
       );
     }
 
-    let categoryImage: Category = await this.findOne({
+    const categoryImage: Category = await this.findOne({
       where: {
         slug: categorySlug,
         coverImg: uri,

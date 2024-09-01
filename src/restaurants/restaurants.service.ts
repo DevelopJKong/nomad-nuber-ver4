@@ -1,5 +1,4 @@
 import { EditRestaurantInput } from './dtos/edit-restaurant.dto';
-import { EditProfileInput } from './../users/dtos/edit-profile.dto';
 import { LoggerService } from 'src/logger/logger.service';
 import { User } from 'src/users/entities/user.entity';
 import { CreateRestaurantInput } from './dtos/create-restaurant.dto';

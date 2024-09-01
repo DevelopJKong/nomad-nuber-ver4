@@ -81,7 +81,14 @@ export class MailService {
     } catch (error) {
       this.loggerService
         .logger()
-        .error(this.loggerService.loggerInfo('메일을 보내지 못하였습니다', error.message, error.name, error.stack));
+        .error(
+          this.loggerService.loggerInfo(
+            '메일을 보내지 못하였습니다',
+            error.message,
+            error.name,
+            error.stack,
+          ),
+        );
       throw new InternalServerErrorException();
     }
   }

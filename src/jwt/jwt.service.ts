@@ -11,7 +11,7 @@ export class JwtService {
     return jwt.sign(payload, this.options.privateKey);
   }
 
-  verify(token:string){
-    return jwt.verify(token,this.options.privateKey);
+  verify(token: string) {
+    return jwt.verify(token, this.options.privateKey);
   }
 }

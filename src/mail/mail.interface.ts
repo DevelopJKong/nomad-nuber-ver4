@@ -8,4 +8,3 @@ export interface MailModuleOptions {
     pass: string;
   };
 }
-

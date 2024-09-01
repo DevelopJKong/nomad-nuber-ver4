@@ -7,11 +7,11 @@ import { Role } from 'src/auth/role.decorator';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { EditRestaurantInput, EditRestaurantOutput } from './dtos/edit-restaurant.dto';
 
-@Resolver((of) => Restaurant)
+@Resolver((_of: unknown) => Restaurant)
 export class RestaurantsResolver {
   constructor(private readonly restaurantsService: RestaurantsService) {}
 
-  @Mutation((returns) => CreateRestaurantOutput)
+  @Mutation((_returns) => CreateRestaurantOutput)
   @Role(['Owner'])
   async createRestaurant(
     @AuthUser() authUser: User,
@@ -20,7 +20,7 @@ export class RestaurantsResolver {
     return this.restaurantsService.createRestaurant(authUser, createRestaurantInput);
   }
 
-  @Mutation((returns) => EditRestaurantOutput)
+  @Mutation((_returns) => EditRestaurantOutput)
   @Role(['Owner'])
   async editRestaurant(
     @AuthUser() authUser: User,

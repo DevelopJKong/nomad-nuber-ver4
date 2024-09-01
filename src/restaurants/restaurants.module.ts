@@ -9,7 +9,11 @@ import { provideCustomRepository } from 'src/common/custom-repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Restaurant, Category])],
-  providers: [RestaurantsService, RestaurantsResolver, provideCustomRepository(Category, CategoryRepository)],
+  providers: [
+    RestaurantsService,
+    RestaurantsResolver,
+    provideCustomRepository(Category, CategoryRepository),
+  ],
   exports: [RestaurantsResolver],
 })
 export class RestaurantsModule {}

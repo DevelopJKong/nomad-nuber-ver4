@@ -42,7 +42,9 @@ export class UsersService {
       };
     } catch (error) {
       const { message, name, stack } = error;
-      this.loggerService.logger().error(this.loggerService.loggerInfo('유저 검색 오류', message, name, stack));
+      this.loggerService
+        .logger()
+        .error(this.loggerService.loggerInfo('유저 검색 오류', message, name, stack));
       return {
         ok: false,
         error: '유저 검색 오류',
@@ -68,7 +70,9 @@ export class UsersService {
 
       if (exists) {
         //! 📢 error 존재하는 계정으로 사용자가 만들려고 했을 경우
-        this.loggerService.logger().error(this.loggerService.loggerInfo('이미 존재하는 계정입니다'));
+        this.loggerService
+          .logger()
+          .error(this.loggerService.loggerInfo('이미 존재하는 계정입니다'));
         return {
           ok: false,
           error: '이미 존재하는 계정입니다',
@@ -90,7 +94,9 @@ export class UsersService {
         }),
       );
 
-      await this.emailService.sendMail(this.emailService.mailVar(user.email, user.email, verification.code));
+      await this.emailService.sendMail(
+        this.emailService.mailVar(user.email, user.email, verification.code),
+      );
 
       //* 👍 success
       this.loggerService.logger().info(this.loggerService.loggerInfo('사용자 계정 만들기 성공'));
@@ -100,7 +106,9 @@ export class UsersService {
     } catch (error) {
       //! 📢 error 예상치 못한 에러 발생
       const { message, name, stack } = error;
-      this.loggerService.logger().error(this.loggerService.loggerInfo('계정 생성 오류', message, name, stack));
+      this.loggerService
+        .logger()
+        .error(this.loggerService.loggerInfo('계정 생성 오류', message, name, stack));
       return {
         ok: false,
         error: '계정 생성 오류',
@@ -130,7 +138,9 @@ export class UsersService {
 
       if (!user) {
         //! 📢 error 해당 계정이 존재하지 않을 경우
-        this.loggerService.logger().error(this.loggerService.loggerInfo('해당 계정이 존재하지 않습니다'));
+        this.loggerService
+          .logger()
+          .error(this.loggerService.loggerInfo('해당 계정이 존재하지 않습니다'));
         return {
           ok: false,
           error: '해당 계정이 존재하지 않습니다',
@@ -141,7 +151,9 @@ export class UsersService {
 
       //! 📢 error 입력한 비밀번호가 잘못 되었을 경우
       if (!passwordCorrect) {
-        this.loggerService.logger().error(this.loggerService.loggerInfo('비밀번호가 잘못 되었습니다'));
+        this.loggerService
+          .logger()
+          .error(this.loggerService.loggerInfo('비밀번호가 잘못 되었습니다'));
         return {
           ok: false,
           error: '비밀번호가 잘못 되었습니다',
@@ -159,7 +171,9 @@ export class UsersService {
     } catch (error) {
       //! 📢 error 예상치 못한 에러 발생
       const { message, name, stack } = error;
-      this.loggerService.logger().error(this.loggerService.loggerInfo('로그인 오류', message, name, stack));
+      this.loggerService
+        .logger()
+        .error(this.loggerService.loggerInfo('로그인 오류', message, name, stack));
       return {
         ok: false,
         error: '로그인 오류',
@@ -177,7 +191,10 @@ export class UsersService {
    * @returns {Promise<EditProfileOutput>}
    */
 
-  async editProfile(userId: number, { email, password }: EditProfileInput): Promise<EditProfileOutput> {
+  async editProfile(
+    userId: number,
+    { email, password }: EditProfileInput,
+  ): Promise<EditProfileOutput> {
     try {
       const user = await this.users.findOne({ where: { id: userId } });
       if (email) {
@@ -187,7 +204,9 @@ export class UsersService {
         await this.verifications.delete({ user: { id: user.id } });
         const verification = await this.verifications.save(this.verifications.create({ user }));
 
-        await this.emailService.sendMail(this.emailService.mailVar(user.email, user.email, verification.code));
+        await this.emailService.sendMail(
+          this.emailService.mailVar(user.email, user.email, verification.code),
+        );
       }
 
       if (password) {
@@ -204,7 +223,9 @@ export class UsersService {
     } catch (error) {
       //! 📢 error 예상치 못한 에러 발생
       const { message, name, stack } = error;
-      this.loggerService.logger().error(this.loggerService.loggerInfo('계정 정보 수정 오류', message, name, stack));
+      this.loggerService
+        .logger()
+        .error(this.loggerService.loggerInfo('계정 정보 수정 오류', message, name, stack));
       return {
         ok: false,
         error: '계정 정보 수정 오류',
@@ -250,7 +271,9 @@ export class UsersService {
     } catch (error) {
       //! 📢 error 예상치 못한 에러 발생
       const { message, name, stack } = error;
-      this.loggerService.logger().error(this.loggerService.loggerInfo('이메일 확인 오류', message, name, stack));
+      this.loggerService
+        .logger()
+        .error(this.loggerService.loggerInfo('이메일 확인 오류', message, name, stack));
       return {
         ok: false,
         error: '이메일 확인 오류',

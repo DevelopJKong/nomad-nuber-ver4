@@ -97,7 +97,9 @@ export class LoggerService {
       try {
         const callerLine = error.stack.split('\n')[2];
         const apiNameArray = callerLine.split(' ');
-        const apiName = apiNameArray.filter((item: string) => item !== null && item !== undefined && item !== '')[1];
+        const apiName = apiNameArray.filter(
+          (item: string) => item !== null && item !== undefined && item !== '',
+        )[1];
         let LineNumber = callerLine.split('(')[1].split('/').slice(-1)[0].slice(0, -1);
         if (LineNumber.includes('C:')) {
           LineNumber = `${LineNumber.split('\\').slice(-1)[0]}`;
