@@ -1,11 +1,11 @@
-import { VerifyEmailOutput, VerifyEmailInput } from './dtos/verify-email.dto';
+import { VerifyEmailOutput, VerifyEmailInput } from './dto/verify-email.dto';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { Role } from 'src/auth/role.decorator';
-import { CreateAccountInput, CreateAccountOutput } from './dtos/create-account.dto';
-import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
-import { LoginInput, LoginOutput } from './dtos/login.dto';
-import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
+import { CreateAccountInput, CreateAccountOutput } from './dto/create-account.dto';
+import { EditProfileInput, EditProfileOutput } from './dto/edit-profile.dto';
+import { LoginInput, LoginOutput } from './dto/login.dto';
+import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
@@ -30,6 +30,7 @@ export class UsersResolver {
   ): Promise<CreateAccountOutput> {
     return this.usersService.createAccount(createAccountInput);
   }
+
   @Mutation((_returns) => LoginOutput)
   async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     return this.usersService.login(loginInput);

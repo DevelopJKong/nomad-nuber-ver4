@@ -1,5 +1,5 @@
 import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
-import { CoreOutput } from 'src/common/dtos/output.dto';
+import { CoreOutput } from 'src/common/dto/output.dto';
 import { Field, InputType, ObjectType, PickType } from '@nestjs/graphql';
 
 @InputType()

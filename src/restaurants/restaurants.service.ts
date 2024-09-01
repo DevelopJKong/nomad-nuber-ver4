@@ -1,7 +1,7 @@
-import { EditRestaurantInput } from './dtos/edit-restaurant.dto';
+import { EditRestaurantInput } from './dto/edit-restaurant.dto';
 import { LoggerService } from 'src/logger/logger.service';
 import { User } from 'src/users/entities/user.entity';
-import { CreateRestaurantInput } from './dtos/create-restaurant.dto';
+import { CreateRestaurantInput } from './dto/create-restaurant.dto';
 import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';

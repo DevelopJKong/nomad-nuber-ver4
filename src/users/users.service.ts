@@ -1,16 +1,16 @@
-import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
+import { EditProfileInput, EditProfileOutput } from './dto/edit-profile.dto';
 import { Verification } from './entities/verification.entity';
 import { JwtService } from './../jwt/jwt.service';
-import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
-import { LoginInput, LoginOutput } from './dtos/login.dto';
+import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
+import { LoginInput, LoginOutput } from './dto/login.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoggerService } from 'src/logger/logger.service';
 import { Repository } from 'typeorm';
-import { CreateAccountInput, CreateAccountOutput } from './dtos/create-account.dto';
+import { CreateAccountInput, CreateAccountOutput } from './dto/create-account.dto';
 import { User } from './entities/user.entity';
 import { MailService } from 'src/mail/mail.service';
-import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
+import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify-email.dto';
 
 @Injectable()
 export class UsersService {
