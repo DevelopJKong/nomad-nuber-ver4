@@ -1,3 +1,5 @@
+import type { Generated } from 'kysely-typeorm';
+
 import { Field, ObjectType } from '@nestjs/graphql';
 import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
@@ -5,7 +7,7 @@ import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'type
 export class CoreEntity {
   @PrimaryGeneratedColumn()
   @Field((type) => Number)
-  id: number;
+  id: Generated<number>;
 
   @CreateDateColumn()
   @Field((type) => Date)

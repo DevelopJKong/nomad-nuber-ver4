@@ -85,21 +85,14 @@ export class LoggerService {
    *  ! stack  에러 스택
    *  ! return 최종 메시지
    */
-  loggerInfo = (
-    custom: string | null = '',
-    message: string | null = '',
-    name: string | null = '',
-    stack: string | null = '',
-  ): string => {
+  loggerInfo = (custom: string | null = '', message: string | null = '', name: string | null = '', stack: string | null = ''): string => {
     try {
       throw Error(message);
     } catch (error) {
       try {
         const callerLine = error.stack.split('\n')[2];
         const apiNameArray = callerLine.split(' ');
-        const apiName = apiNameArray.filter(
-          (item: string) => item !== null && item !== undefined && item !== '',
-        )[1];
+        const apiName = apiNameArray.filter((item: string) => item !== null && item !== undefined && item !== '')[1];
         let LineNumber = callerLine.split('(')[1].split('/').slice(-1)[0].slice(0, -1);
         if (LineNumber.includes('C:')) {
           LineNumber = `${LineNumber.split('\\').slice(-1)[0]}`;

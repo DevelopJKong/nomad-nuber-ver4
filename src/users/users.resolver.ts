@@ -25,9 +25,7 @@ export class UsersResolver {
   }
 
   @Mutation((_returns) => CreateAccountOutput)
-  async createAccount(
-    @Args('input') createAccountInput: CreateAccountInput,
-  ): Promise<CreateAccountOutput> {
+  async createAccount(@Args('input') createAccountInput: CreateAccountInput): Promise<CreateAccountOutput> {
     return this.usersService.createAccount(createAccountInput);
   }
 
@@ -37,10 +35,7 @@ export class UsersResolver {
   }
 
   @Mutation((_returns) => EditProfileOutput)
-  async editProfile(
-    @Args('input') editProfileInput: EditProfileInput,
-    @AuthUser() authUser: User,
-  ): Promise<EditProfileOutput> {
+  async editProfile(@Args('input') editProfileInput: EditProfileInput, @AuthUser() authUser: User): Promise<EditProfileOutput> {
     return this.usersService.editProfile(authUser.id, editProfileInput);
   }
 

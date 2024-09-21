@@ -11,5 +11,5 @@ export class UserProfileInput {
 @ObjectType()
 export class UserProfileOutput extends CoreOutput {
   @Field((_type) => User, { nullable: true })
-  user?: User;
+  user?: Omit<User, 'restaurants' | 'hashPassword' | 'checkPassword'>;
 }

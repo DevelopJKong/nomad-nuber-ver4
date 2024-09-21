@@ -5,8 +5,8 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'prettier'],
-  extends: ['plugin:@typescript-eslint/recommended', 'prettier'],
+  plugins: ['@typescript-eslint/eslint-plugin'],
+  extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended', 'prettier'],
   root: true,
   env: {
     node: true,
@@ -14,6 +14,18 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        semi: true,
+        tabWidth: 2,
+        printWidth: 140,
+        singleQuote: true,
+        trailingComma: 'all',
+        jsxSingleQuote: true,
+        bracketSpacing: true,
+      },
+    ], // ! prettier 설정
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',

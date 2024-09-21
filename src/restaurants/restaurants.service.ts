@@ -38,9 +38,7 @@ export class RestaurantsService {
     } catch (error) {
       //! 📢 error 예상치 못한 에러 발생
       const { message, name, stack } = error;
-      this.loggerService
-        .logger()
-        .error(this.loggerService.loggerInfo('레스토랑 생성 오류', message, name, stack));
+      this.loggerService.logger().error(this.loggerService.loggerInfo('레스토랑 생성 오류', message, name, stack));
       return {
         ok: false,
         error: '레스토랑 생성 오류',

@@ -4,37 +4,38 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsString, Length } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
+import { NonAttribute } from 'kysely-typeorm';
 
 @InputType('RestaurantInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class Restaurant extends CoreEntity {
-  @Field((type) => String)
+  @Field((_type) => String)
   @Column()
   @IsString()
   @Length(5)
   name: string;
 
-  @Field((type) => String)
+  @Field((_type) => String)
   @Column()
   @IsString()
   coverImg: string;
 
-  @Field((type) => String)
+  @Field((_type) => String)
   @Column()
   address: string;
 
-  @Field((type) => User)
-  @ManyToOne((type) => User, (owner) => owner.restaurants)
+  @Field((_type) => User)
+  @ManyToOne((_type) => User, (owner) => owner.restaurants)
   owner: User;
 
   @RelationId((restaurant: Restaurant) => restaurant.owner)
   ownerId: number;
 
-  @ManyToOne((type) => Category, (category: Category) => category.restaurants)
-  category: Category;
+  @ManyToOne((_type) => Category, (category: Category) => category.restaurants)
+  category: NonAttribute<Category>;
 
-  @Field((type) => Boolean)
+  @Field((_type) => Boolean)
   @Column({ default: false })
   isPromoted: boolean;
 

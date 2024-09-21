@@ -7,10 +7,7 @@ import Mail from 'nodemailer/lib/mailer';
 
 @Injectable()
 export class MailService {
-  constructor(
-    @Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions,
-    private readonly loggerService: LoggerService,
-  ) {}
+  constructor(@Inject(CONFIG_OPTIONS) private readonly options: MailModuleOptions, private readonly loggerService: LoggerService) {}
 
   /**
    *
@@ -81,14 +78,7 @@ export class MailService {
     } catch (error) {
       this.loggerService
         .logger()
-        .error(
-          this.loggerService.loggerInfo(
-            '메일을 보내지 못하였습니다',
-            error.message,
-            error.name,
-            error.stack,
-          ),
-        );
+        .error(this.loggerService.loggerInfo('메일을 보내지 못하였습니다', error.message, error.name, error.stack));
       throw new InternalServerErrorException();
     }
   }

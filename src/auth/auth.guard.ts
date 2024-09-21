@@ -7,11 +7,7 @@ import { AllowedRoles } from './role.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(
-    private readonly reflector: Reflector,
-    private readonly jwtService: JwtService,
-    private readonly userService: UsersService,
-  ) {}
+  constructor(private readonly reflector: Reflector, private readonly jwtService: JwtService, private readonly userService: UsersService) {}
   async canActivate(context: ExecutionContext) {
     const roles = this.reflector.get<AllowedRoles>('role', context.getHandler());
     if (!roles) {

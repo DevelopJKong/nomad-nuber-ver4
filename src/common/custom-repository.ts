@@ -13,11 +13,7 @@ export function provideCustomRepository<T>(
     inject: [getDataSourceToken(dataSource)],
     useFactory(dataSource: DataSource) {
       const baseRepository = dataSource.getRepository(entity);
-      return new repository(
-        baseRepository.target,
-        baseRepository.manager,
-        baseRepository.queryRunner,
-      );
+      return new repository(baseRepository.target, baseRepository.manager, baseRepository.queryRunner);
     },
   };
 }

@@ -12,9 +12,7 @@ export class CategoryRepository extends Repository<Category> {
     });
 
     if (!category) {
-      category = await this.save(
-        this.create({ slug: categorySlug, name: categoryName, coverImg: uri }),
-      );
+      category = await this.save(this.create({ slug: categorySlug, name: categoryName, coverImg: uri }));
     }
 
     const categoryImage: Category = await this.findOne({
