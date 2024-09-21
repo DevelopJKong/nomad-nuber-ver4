@@ -12,7 +12,8 @@ import { User } from './entities/user.entity';
 import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify-email.dto';
 import * as bcrypt from 'bcrypt';
 import { MailService } from '../mail/mail.service';
-import { Kysely, sql } from 'kysely';
+import { Kysely } from 'kysely';
+import { jsonArrayFrom } from 'kysely/helpers/postgres';
 import { Database } from '../common/utils/database';
 import { Restaurant } from '../restaurants/entities/restaurant.entity';
 import { NonAttribute } from 'kysely-typeorm';
@@ -44,17 +45,29 @@ export class UsersService {
       //   },
       // });
 
-      const user = await this.kysely.selectFrom('user').selectAll().where('user.id', '=', userId).executeTakeFirst();
-      const restaurants = await this.kysely.selectFrom('restaurant').selectAll().where('restaurant.ownerId', '=', userId).execute();
+      // https://www.youtube.com/watch?v=vnSnor_C2rA&t=1104s
+      const user = await this.kysely
+        .selectFrom('user')
+        .selectAll('user')
+        .select((eb) => {
+          return [
+            jsonArrayFrom(
+              eb
+                .selectFrom('restaurant')
+                .selectAll('restaurant')
+                .whereRef('restaurant.ownerId', '=', 'user.id')
+                .orderBy('restaurant.id', 'desc'),
+            ).as('restaurants'),
+          ];
+        })
+        .where('user.id', '=', userId)
+        .executeTakeFirst();
 
       //* 👍 success
       this.loggerService.logger().info(this.loggerService.loggerInfo('유저 검색 성공'));
       return {
         ok: true,
-        user: {
-          ...user,
-          restaurants: restaurants as NonAttribute<Restaurant>[],
-        },
+        user: user as User & { restaurants: NonAttribute<Restaurant>[] },
       };
     } catch (error) {
       const { message, name, stack } = error;
