@@ -1,10 +1,8 @@
 import type { NonAttribute } from 'kysely-typeorm';
 import { CoreEntity } from './../../common/entities/core.entity';
 import { Field, InputType, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { IsEmail, IsString, IsEnum } from 'class-validator';
-import * as bcrypt from 'bcrypt';
-import { InternalServerErrorException } from '@nestjs/common';
 import { Restaurant } from 'src/restaurants/entities/restaurant.entity';
 
 export enum UserRole {

@@ -27,7 +27,7 @@ export class Restaurant extends CoreEntity {
 
   @Field((_type) => User)
   @ManyToOne((_type) => User, (owner) => owner.restaurants)
-  owner: User;
+  owner: NonAttribute<User>;
 
   @RelationId((restaurant: Restaurant) => restaurant.owner)
   ownerId: number;

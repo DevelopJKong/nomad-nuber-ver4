@@ -6,7 +6,7 @@ import { Verification } from '../users/entities/verification.entity';
 import { Restaurant } from '../restaurants/entities/restaurant.entity';
 import { Category } from '../restaurants/entities/category.entity';
 import { DataSource } from 'typeorm';
-import { CamelCasePlugin, Kysely, PostgresAdapter, PostgresIntrospector, PostgresQueryCompiler } from 'kysely';
+import { Kysely, PostgresAdapter, PostgresIntrospector, PostgresQueryCompiler } from 'kysely';
 import type { Database } from '../common/utils/database';
 import { KyselyTypeORMDialect } from 'kysely-typeorm';
 
@@ -46,7 +46,6 @@ const typeOrmConfig: TypeOrmModuleAsyncOptions = {
             },
             typeORMDataSource: dataSource,
           }),
-          plugins: [new CamelCasePlugin()],
         });
 
         return kysely;

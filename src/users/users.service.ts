@@ -12,8 +12,10 @@ import { User } from './entities/user.entity';
 import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify-email.dto';
 import * as bcrypt from 'bcrypt';
 import { MailService } from '../mail/mail.service';
-import { Kysely } from 'kysely';
+import { Kysely, sql } from 'kysely';
 import { Database } from '../common/utils/database';
+import { Restaurant } from '../restaurants/entities/restaurant.entity';
+import { NonAttribute } from 'kysely-typeorm';
 
 @Injectable()
 export class UsersService {
@@ -36,19 +38,23 @@ export class UsersService {
    */
   async findById({ userId }: UserProfileInput): Promise<UserProfileOutput> {
     try {
-      const user = await this.users.findOne({
-        where: {
-          id: userId,
-        },
-      });
+      // const user = await this.users.findOne({
+      //   where: {
+      //     id: userId,
+      //   },
+      // });
 
-      // const user = await this.dataSource.kysely.selectFrom('user').where('user.id', '=', userId).executeTakeFirst();
+      const user = await this.kysely.selectFrom('user').selectAll().where('user.id', '=', userId).executeTakeFirst();
+      const restaurants = await this.kysely.selectFrom('restaurant').selectAll().where('restaurant.ownerId', '=', userId).execute();
 
       //* 👍 success
       this.loggerService.logger().info(this.loggerService.loggerInfo('유저 검색 성공'));
       return {
         ok: true,
-        user,
+        user: {
+          ...user,
+          restaurants: restaurants as NonAttribute<Restaurant>[],
+        },
       };
     } catch (error) {
       const { message, name, stack } = error;
@@ -130,16 +136,6 @@ export class UsersService {
    */
   async login({ email, password }: LoginInput): Promise<LoginOutput> {
     try {
-      // const user = await this.users.findOne({
-      //   where: {
-      //     email,
-      //   },
-      //   select: {
-      //     id: true,
-      //     password: true,
-      //   },
-      // });
-
       const user = await this.kysely
         .selectFrom('user')
         .select(['user.id', 'user.password'])
